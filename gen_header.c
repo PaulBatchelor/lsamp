@@ -43,6 +43,7 @@ int test_3(lsamp_data *ld) {
 }
 int test_4(lsamp_data *ld) {
     lsamp_create_header(&ld);
+	lsamp_open_tmpfile(ld, "out.tmp");
     lsamp_add_file(ld, "clap.wav");
     //lsamp_add_file(ld, "clap.wav");
     lsamp_print_header(ld, stdout);
@@ -51,13 +52,23 @@ int test_4(lsamp_data *ld) {
     lsamp_destroy_header(&ld);
     return 1;
 }
+int test_5(lsamp_data *ld) {
+/* Open a smp file, extract register 0 to "out.wav" */
+	lsamp_create_header(&ld);
+	lsamp_read_header(ld, "out.smp");
+    printf("Offset of register 1 is %ld\n", lsamp_get_offset(ld, 0));
+    printf("Size of register 1 is %ld\n", lsamp_get_size(ld, 0));
+	lsamp_write_sample(ld, "out.smp", "lsampout.wav", 0);
+	lsamp_destroy_header(&ld);
+	return 1;
+}
 int main() {
     lsamp_data *ld;
 
     //test_1(ld);
     //test_2(ld);
     //test_3(ld);
-    test_4(ld);
-
+    //test_4(ld);
+	test_5(ld);
     return 0;
 }

@@ -18,13 +18,17 @@ void lsamp_create_header(lsamp_data **ld) {
     lp->pos = 0;
     lp->num_reg= 0;
     lp->mode = LSAMP_INIT;
-}
+	lp->buf_open = 0;
 
+}
 void lsamp_destroy_header(lsamp_data **ld) {
     if((*ld)->mode != LSAMP_INIT) {
         free((*ld)->entry);
         fclose((*ld)->fp);
     }
+	if((*ld)->buf_open) {
+		fclose((*ld)->data);
+	}
     free(*ld);
 }
 
@@ -50,6 +54,9 @@ void lsamp_write_header(lsamp_data *ld, const char *fname) {
         LSWRITE_32(entry[i].size);
     }
     ld->mode = LSAMP_WRITE;
+	if(ld->buf_open) {
+		/* this is where we will concatenate the two files */
+	}
 }
 
 void lsamp_add_entry(lsamp_data *ld, uint32_t offset, uint32_t size) {
@@ -137,12 +144,54 @@ void lsamp_close_sndfile(lsamp_data *ld) {
     sf_close(ld->sndfile.file);
 }
 void lsamp_write_sndfile(lsamp_data *ld) {
-
+	if(!ld->buf_open) {
+		fprintf(stderr, "ERROR: TMP sndfile is not openend.\n");
+		exit(0);
+	}
+	while((ld->buf.count = sf_read_double(ld->sndfile.file, ld->buf.buf, LSAMP_BUFFER_SIZE))) {
+		fwrite(ld->buf.buf, sizeof(double), ld->buf.count, ld->data);
+	}
 }
+
 void lsamp_add_file(lsamp_data *ld, const char *fname) {
     lsamp_open_sndfile(ld, fname);
     lsamp_add_entry(ld, ld->data_size, lsamp_sndfile_size(ld));
     lsamp_write_sndfile(ld);
     ld->data_size += lsamp_sndfile_size(ld);
     lsamp_close_sndfile(ld);
+}
+
+void lsamp_open_tmpfile(lsamp_data *ld, const char *tmpfile) {
+	if(ld->buf_open) {
+		fprintf(stderr, "ERROR: buffer is already opened.");
+		exit(0);
+	}
+	ld->data = fopen(tmpfile, "wb");
+	ld->buf_open = 1;
+}
+void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfile, uint32_t pos) {
+	SF_INFO info;
+	SNDFILE *wavfile;
+	uint32_t file_size = lsamp_get_size(ld, 0);
+	uint32_t samples_left = file_size;
+	uint32_t bufsize = LSAMP_BUFFER_SIZE;
+	info.samplerate = 44100;
+	info.channels = 1;
+	info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24; 
+
+	wavfile = sf_open(outfile, SFM_WRITE, &info);
+	fseek(ld->fp, ld->header_size + lsamp_get_offset(ld, 0), SEEK_SET);
+
+	printf("the filesize is %ld. and %ld samples left\n", file_size, samples_left);
+	while(samples_left > 0) {
+		if(samples_left < LSAMP_BUFFER_SIZE) {
+			bufsize = samples_left;
+		}
+		fread(ld->buf.buf, sizeof(double), bufsize, ld->fp);
+		samples_left -= sf_writef_double(wavfile, ld->buf.buf, bufsize);
+		printf("there are %ld samples left\n" , samples_left);	
+
+	}
+
+	sf_close(wavfile);
 }
