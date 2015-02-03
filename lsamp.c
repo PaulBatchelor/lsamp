@@ -172,24 +172,27 @@ void lsamp_open_tmpfile(lsamp_data *ld, const char *tmpfile) {
 void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfile, uint32_t pos) {
 	SF_INFO info;
 	SNDFILE *wavfile;
-	uint32_t file_size = lsamp_get_size(ld, 0);
+	uint32_t file_size = lsamp_get_size(ld, pos);
+//	uint32_t file_size = LSAMP_BUFFER_SIZE;
 	uint32_t samples_left = file_size;
 	uint32_t bufsize = LSAMP_BUFFER_SIZE;
+	long file_offset = ld->header_size + (lsamp_get_offset(ld, pos) * sizeof(double));
 	info.samplerate = 44100;
 	info.channels = 1;
 	info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24; 
 
 	wavfile = sf_open(outfile, SFM_WRITE, &info);
-	fseek(ld->fp, ld->header_size + lsamp_get_offset(ld, 0), SEEK_SET);
-
+	printf("the file offset is %ld\n", file_offset);
+	fseek(ld->fp, file_offset, SEEK_SET);
 	printf("the filesize is %ld. and %ld samples left\n", file_size, samples_left);
 	while(samples_left > 0) {
 		if(samples_left < LSAMP_BUFFER_SIZE) {
 			bufsize = samples_left;
 		}
+
 		fread(ld->buf.buf, sizeof(double), bufsize, ld->fp);
+		
 		samples_left -= sf_writef_double(wavfile, ld->buf.buf, bufsize);
-		printf("there are %ld samples left\n" , samples_left);	
 
 	}
 

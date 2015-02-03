@@ -1,7 +1,9 @@
+.PHONY= default
 CLAGS+= -lsndfile
-lsamp.o : lsamp.c lsamp.h
-	gcc -c lsamp.c
-test_lsamp : gen_header.c lsamp.o
+
+default: test_lsamp
+
+test_lsamp: test_lsamp.c lsamp.o lsamp.h
 	gcc -lsndfile -o $@ $< lsamp.o
 memtest: test_lsamp
 	valgrind --leak-check=yes test_lsamp
