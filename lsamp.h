@@ -6,6 +6,8 @@
 
 #define LSAMP_BUFFER_SIZE 1024
 
+#define LSAMP_FLOAT float
+
 enum {
     LSAMP_INIT,
     LSAMP_READ,
@@ -14,6 +16,7 @@ enum {
 
 typedef FILE lsamp_fp_data;
 typedef FILE lsamp_fp_out;
+
 
 typedef struct {
     uint32_t offset;
@@ -26,7 +29,7 @@ typedef struct {
 } lsamp_sndfile;
 
 typedef struct {
-    double buf[LSAMP_BUFFER_SIZE];
+    LSAMP_FLOAT buf[LSAMP_BUFFER_SIZE];
     int count;
 }lsamp_buffer;
 

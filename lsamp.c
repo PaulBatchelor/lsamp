@@ -148,16 +148,16 @@ void lsamp_write_sndfile(lsamp_data *ld) {
 		fprintf(stderr, "ERROR: TMP sndfile is not openend.\n");
 		exit(0);
 	}
-	while((ld->buf.count = sf_read_double(ld->sndfile.file, ld->buf.buf, LSAMP_BUFFER_SIZE))) {
-		fwrite(ld->buf.buf, sizeof(double), ld->buf.count, ld->data);
+	while((ld->buf.count = sf_read_float(ld->sndfile.file, ld->buf.buf, LSAMP_BUFFER_SIZE))) {
+		fwrite(ld->buf.buf, sizeof(LSAMP_FLOAT), ld->buf.count, ld->data);
 	}
 }
 
 void lsamp_add_file(lsamp_data *ld, const char *fname) {
     lsamp_open_sndfile(ld, fname);
-    lsamp_add_entry(ld, ld->data_size, lsamp_sndfile_size(ld));
+    lsamp_add_entry(ld, ld->data_size, lsamp_sndfile_size(ld) * sizeof(LSAMP_FLOAT));
     lsamp_write_sndfile(ld);
-    ld->data_size += lsamp_sndfile_size(ld);
+    ld->data_size += lsamp_sndfile_size(ld) * sizeof(LSAMP_FLOAT);
     lsamp_close_sndfile(ld);
 }
 
@@ -172,11 +172,12 @@ void lsamp_open_tmpfile(lsamp_data *ld, const char *tmpfile) {
 void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfile, uint32_t pos) {
 	SF_INFO info;
 	SNDFILE *wavfile;
-	uint32_t file_size = lsamp_get_size(ld, pos);
+	uint32_t file_size = lsamp_get_size(ld, pos) / sizeof(LSAMP_FLOAT);
 //	uint32_t file_size = LSAMP_BUFFER_SIZE;
 	uint32_t samples_left = file_size;
 	uint32_t bufsize = LSAMP_BUFFER_SIZE;
-	long file_offset = ld->header_size + (lsamp_get_offset(ld, pos) * sizeof(double));
+//	long file_offset = ld->header_size + (lsamp_get_offset(ld, pos) * sizeof(LSAMP_FLOAT));
+	long file_offset = ld->header_size + lsamp_get_offset(ld, pos);
 	info.samplerate = 44100;
 	info.channels = 1;
 	info.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24; 
@@ -189,11 +190,8 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
 		if(samples_left < LSAMP_BUFFER_SIZE) {
 			bufsize = samples_left;
 		}
-
-		fread(ld->buf.buf, sizeof(double), bufsize, ld->fp);
-		
-		samples_left -= sf_writef_double(wavfile, ld->buf.buf, bufsize);
-
+		fread(ld->buf.buf, sizeof(LSAMP_FLOAT), bufsize, ld->fp);
+		samples_left -= sf_writef_float(wavfile, ld->buf.buf, bufsize);
 	}
 
 	sf_close(wavfile);

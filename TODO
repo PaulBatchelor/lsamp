@@ -1,9 +1,1 @@
-rewrite sfprocess.c sndfile example so it works with my coding conventions.
-
-right now, I need a function that can grab sample length, as well as do checks to make sure it is a mono file.
-
-size and data position needs to be recorded, then a function needs to append/write the raw sample data to a file.
-
-Write this keeping in mind that we might move from libsndfile to either portsf or the sox library. we'll see..
-
-
+Change sample size to be int24 internally, not double
