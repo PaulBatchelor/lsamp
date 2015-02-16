@@ -17,7 +17,7 @@ out.smp: out.header out.bin
 	cat out.header out.bin > out.smp
 
 lsamp_seq: lsamp_seq.c lsamp.o
-	gcc -Wall lsamp_seq.c -lsndfile -o $@ lsamp.o
+	gcc -g -Wall lsamp_seq.c -lsndfile -o $@ lsamp.o
 
 clean:
 	rm -rf test_lsamp lsamp.o lsampout.wav lsampadd

@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include <sndfile.h>
+#include <string.h>
 
 #include "lsamp.h"
 
@@ -197,18 +198,43 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
 	sf_close(wavfile);
 }
 
-uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
-    uint32_t data_size, uint32_t reg, uint32_t pos){
 /* This function will read data_size number of LSAMP_FLOATs into data 
  * and return  the number of samples read. 
+ *
+ * If the sample is done being read, we need to do something about it.
+ *
+ * An explantion for how this works: 
+ *
+ * sample size (we know this)
+ * |--------------------|
+ * buffers (we know this)
+ * |-----|-----|-----|-----|
+ * samples needed (we don't know this)
+ *                   |--|
+ * 
+ * the lsamp size is expressed in bytes, not samples. so the sample size is
+ * divided by sizeof(LSAMP_FLOAT)
+ *
+ * unused_part_of_buffer = (pos + buffer_size) - sample_size
+ * used_part_of_buffer = buffer_size - unused_part_of_buffer 
+ * therefore...
+ * samplesread = buffer_size - ((pos + buffer_size) - sample_size)
+ *
+ * TODO: 
+ *  - rename data_size to buffer_size
+ *  - move this comment somewhere else?
+ * 
  */
-    uint32_t i; 
+uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
+    uint32_t data_size, uint32_t reg, uint32_t pos){
     uint32_t offset = lsamp_get_offset(ld, reg);
-    uint32_t size = lsamp_get_size(ld, reg);
+    uint32_t sample_size = lsamp_get_size(ld, reg) / sizeof(LSAMP_FLOAT);
     uint32_t sampsread = data_size;
-    if(pos + data_size > sampsread) {
+    memset(data, 0, data_size * sizeof(LSAMP_FLOAT)); 
+    if(pos + data_size > sample_size) {
+        sampsread = data_size - ((pos + data_size) - sample_size);
     }
-    fseek(ld->fp, ld->header_size + offset + pos, SEEK_SET);
+    fseek(ld->fp, ld->header_size + offset + pos * sizeof(LSAMP_FLOAT), SEEK_SET);
     fread(data, sizeof(LSAMP_FLOAT), sampsread, ld->fp);
     return sampsread;
 }
