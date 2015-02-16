@@ -196,3 +196,12 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
 
 	sf_close(wavfile);
 }
+
+uint32_t lsamp_read_buf(lsamp_data *ld, LSAMP_FLOAT *data, uint32_t data_size, 
+        uint32_t reg){
+/* This function will read data_size number of LSAMP_FLOATs into data 
+ * and return  the number of samples read. 
+ * /
+
+    return 0;
+}
