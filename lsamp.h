@@ -19,9 +19,7 @@ typedef FILE lsamp_fp_out;
 
 
 typedef struct {
-    uint32_t offset;
-    uint32_t size;
-}lsamp_entry;
+    uint32_t offset; uint32_t size; }lsamp_entry;
 
 typedef struct {
     SNDFILE *file;
@@ -63,9 +61,8 @@ void lsamp_read_header(lsamp_data *ld, const char *fname);
 void lsamp_print_header(lsamp_data *ld, FILE *fp);
 uint32_t lsamp_get_size(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_get_offset(lsamp_data *ld, uint32_t reg);
-uint32_t lsamp_read_buf(lsamp_data *ld, LSAMP_FLOAT *data, uint32_t data_size, 
-        uint32_t reg);
-
+uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
+    uint32_t data_size, uint32_t reg, uint32_t pos);
 /* File Operations */
 
 void lsamp_open_sndfile(lsamp_data *ld, const char *fname);
@@ -76,3 +73,4 @@ void lsamp_add_file(lsamp_data *ld, const char *fname);
 void lsamp_open_tmpfile(lsamp_data *ld, const char *tmpfile);
 void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, 
         const char *outfile, uint32_t pos);
+
