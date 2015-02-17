@@ -16,8 +16,8 @@ lsampadd: lsamp.o lsampadd.c
 out.smp: out.header out.bin
 	cat out.header out.bin > out.smp
 
-lsamp_seq: lsamp_seq.c lsamp.o
-	gcc -g -Wall lsamp_seq.c -lsndfile -o $@ lsamp.o
+lsamp_repeater: lsamp_repeater.c lsamp.o
+	gcc -g -Wall $< -lsndfile -o $@ lsamp.o
 
 clean:
-	rm -rf test_lsamp lsamp.o lsampout.wav lsampadd
+	rm -rf test_lsamp lsamp.o lsampout.wav lsampadd lsamp_repeater
