@@ -58,6 +58,7 @@ int main(int argc, char **argv) {
     ad.argpos = &argpos;
     if(argc < 2) {
         fprintf(stderr, "Not enough args\n");
+        return -1;
     }
     if(!strcmp(argv[argpos], "add")){
         if(argc  < 4 ){
