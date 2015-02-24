@@ -47,18 +47,17 @@ int test_4(lsamp_data *ld) {
     lsamp_add_file(ld, "snare.wav");   
     lsamp_add_file(ld, "clap.wav");  
     lsamp_print_header(ld, stdout);
-    /*TODO: valgrind memory error occurs when lsamp_write_header is NOT called...why? */
-    lsamp_write_header(ld, "out.header"); 
+    /*TODO: valgrind memory error occurs when lsamp_write_header is NOT called...why? */ lsamp_write_header(ld, "out.header"); 
     lsamp_destroy_header(&ld);
     return 1;
 }
 int test_5(lsamp_data *ld) {
 /* Open a smp file, extract register 1 to "lsampout.wav" */
 	lsamp_create_header(&ld);
-	lsamp_read_header(ld, "out.smp");
-    printf("Offset of register 1 is %d\n", lsamp_get_offset(ld, 1));
-    printf("Size of register 1 is %d\n", lsamp_get_size(ld, 1));
-	lsamp_write_sample(ld, "out.smp", "lsampout.wav", 1);
+	lsamp_read_header(ld, "tr909.smp");
+    printf("Offset of register 1 is %d\n", lsamp_get_offset(ld, 0));
+    printf("Size of register 1 is %d\n", lsamp_get_size(ld, 0));
+	lsamp_write_sample(ld, "out.smp", "lsampout.wav", 0);
 	lsamp_destroy_header(&ld);
 	return 1;
 }
@@ -68,7 +67,7 @@ int main() {
     //test_1(ld);
     //test_2(ld);
     //test_3(ld);
-    test_4(ld);
+    //test_4(ld);
 	test_5(ld);
     return 0;
 }

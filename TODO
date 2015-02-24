@@ -1,1 +1,11 @@
-Change sample size to be int24 internally, not double
+See tasklist for full set of details... running notes here...
+
+
+=============================
+Tue Feb 24 08:52:24 EST 2015
+=============================
+
+At the moment, I've figured out that the LSAMP format does not have audio 
+distortion issues... it is something in the repeater code...
+
+
