@@ -12,21 +12,6 @@ typedef struct {
     int *argpos;    
 } lsamp_arg_data;
 
-void lsamp_combine(char *header, char *data) {
-    printf("combining %s and %s...\n", header, data);
-    FILE *hp = fopen(header, "a");
-    FILE *dp = fopen(data, "r");
-    char c;
-    while(1){
-        c = fgetc(dp);
-        if(c == EOF) break;
-        fputc(c, hp);
-    }
-    fclose(dp);
-    fclose(hp);
-    unlink(data);
-}
-
 void lsamp_add(lsamp_data *ld, lsamp_arg_data *ad) {
     int i;
     int *argpos = ad->argpos;

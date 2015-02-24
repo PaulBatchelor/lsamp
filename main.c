@@ -110,8 +110,7 @@ uint32_t lsamp_get_size(lsamp_data *ld, uint32_t reg) {
         fprintf(stderr, "ERROR: register %d is out of bounds (%d registers)\n",
                 reg, ld->num_reg);
         exit(0);
-    }
-    fseek(ld->fp, 
+    } fseek(ld->fp, 
             3 * sizeof(uint32_t) + sizeof(uint16_t) + reg * 2 * sizeof(uint32_t), SEEK_SET);
     fread(ptr, sizeof(uint32_t), 1, ld->fp);
     return size;
@@ -237,4 +236,28 @@ uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data,
     fseek(ld->fp, ld->header_size + offset + pos * sizeof(LSAMP_FLOAT), SEEK_SET);
     fread(data, sizeof(LSAMP_FLOAT), sampsread, ld->fp);
     return sampsread;
+}
+
+void lsamp_combine(char *header, char *data) {
+    printf("combining %s and %s...\n", header, data);
+    FILE *hp, *dp;
+    hp = fopen(header, "a");
+    if(hp == NULL){
+        printf("Error: Could not open file %s\n", header);
+        return;
+    }
+
+    dp = fopen(data, "rb");
+    if(dp == NULL){
+        printf("Error: Could not open file %s\n", data);
+        return;
+    }
+    int c;
+    int count = 0;
+    while((c = getc(dp)) != EOF) {
+        fputc(c, hp);
+    }
+    fclose(dp);
+    fclose(hp);
+    unlink(data);
 }

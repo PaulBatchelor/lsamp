@@ -74,3 +74,4 @@ void lsamp_open_tmpfile(lsamp_data *ld, const char *tmpfile);
 void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, 
         const char *outfile, uint32_t pos);
 
+void lsamp_combine(char *header, char *data);
