@@ -8,8 +8,8 @@
 
 #include "lsamp.h"
 
-#define BUFLEN 1024 
-#define LSBUFSIZE 100
+#define BUFLEN 1024
+#define LSBUFSIZE 1024
 
 typedef struct {
     int pos;
@@ -59,7 +59,7 @@ void get_bufval(LSAMP_FLOAT *buf, myData *data) {
 }
 
 void process(LSAMP_FLOAT *buf, myData *data) {
-    if(data->bufpos > LSBUFSIZE || data->pos == 0) {
+    if(data->bufpos >= LSBUFSIZE || data->pos == 0) {
         load_buffer(data);
         data->bufpos = 0;
     }
