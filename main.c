@@ -82,7 +82,6 @@ void lsamp_read_header(lsamp_data *ld, const char *fname) {
     LSREAD_32(data_size);
     LSREAD_16(num_reg);
     ld->entry = malloc( ld->num_reg * sizeof(lsamp_entry) );
-    printf("the size is %d\n", ld->num_reg);
     for(i = 0; i < ld->num_reg; i++) {
         LSREAD_32(entry[i].offset);
         LSREAD_32(entry[i].size);
@@ -91,14 +90,14 @@ void lsamp_read_header(lsamp_data *ld, const char *fname) {
     ld->mode = LSAMP_READ;
 }
 
-void lsamp_print_header(lsamp_data *ld, FILE *fp) {
-    fprintf(stdout, "The header size is %d\n", ld->header_size);
-    fprintf(stdout, "The data size is %d\n", ld->data_size);
-    fprintf(stdout, "There are %d registers\n", ld->num_reg);
+void lsamp_print_header(lsamp_data *ld, FILE *output) {
+    fprintf(output, "The header size is %d\n", ld->header_size);
+    fprintf(output, "The data size is %d\n", ld->data_size);
+    fprintf(output, "There are %d registers\n", ld->num_reg);
     int i;
-    fprintf(stdout, "Registers:\n", ld->num_reg);
+    fprintf(output, "Registers:\n", ld->num_reg);
     for(i = 0; i < ld->num_reg; i++) {
-    fprintf(stdout, "%d: %d offset %d size\n", 
+    fprintf(output, "%d: %d offset %d size\n", 
             i, ld->entry[i].offset, ld->entry[i].size);
     }
 }
@@ -200,9 +199,10 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
 /* This function will read data_size number of LSAMP_FLOATs into data 
  * and return  the number of samples read. 
  *
- * If the sample is done being read, we need to do something about it.
+ * If the sample is done being read, we need to do something about it, which is
+ * to return 0's.
  *
- * An explantion for how this works: 
+ * An explantion for how this all works: 
  *
  * sample size (we know this)
  * |--------------------|

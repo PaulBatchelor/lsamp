@@ -58,7 +58,7 @@ void lsamp_add_entry(lsamp_data *ld, uint32_t offset, uint32_t size);
 /* DB Reading Operations */
 
 void lsamp_read_header(lsamp_data *ld, const char *fname);
-void lsamp_print_header(lsamp_data *ld, FILE *fp);
+void lsamp_print_header(lsamp_data *ld, FILE *output);
 uint32_t lsamp_get_size(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_get_offset(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 

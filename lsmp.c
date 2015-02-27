@@ -34,6 +34,15 @@ void lsamp_add(lsamp_data *ld, lsamp_arg_data *ad) {
     free(tmpfile);
 }
 
+void lsamp_info(lsamp_data *ld, lsamp_arg_data *ad) {
+    int *argpos = ad->argpos;
+    char *smpfile = ad->argv[*ad->argpos];
+    *argpos += 1;
+    lsamp_create_header(&ld);
+    lsamp_read_header(ld, smpfile);
+    lsamp_print_header(ld, stdout);
+}
+
 int main(int argc, char **argv) {
 	lsamp_data *ld;
     lsamp_arg_data ad; 
@@ -53,6 +62,13 @@ int main(int argc, char **argv) {
         printf("Adding samples...\n");
         argpos++;
         lsamp_add(ld, &ad);
+    }else if(!strcmp(argv[argpos], "info")){
+        if(argc  < 3 ){
+            fprintf(stderr, "Usage: lsmp info FILE\n");
+            return -1;
+        }
+        argpos++;
+        lsamp_info(ld, &ad);
     }
 	return 0;
 }
