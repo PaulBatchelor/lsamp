@@ -6,6 +6,12 @@
 
 #include "lsamp.h"
 
+#define ARG_ERROR(NUM, USAGE) if(argc < NUM ){ \
+    fprintf(stderr, "Usage: " USAGE "\n"); \
+    return -1; \
+}
+
+#define ARG_MATCH(ARG) if(!strcmp(argv[argpos], ARG))
 typedef struct {
     char **argv;
     int argc;
@@ -54,22 +60,15 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Not enough args\n");
         return -1;
     }
-    if(!strcmp(argv[argpos], "add")){
-        if(argc  < 4 ){
-            fprintf(stderr, "Usage: lsmp add output FILES\n");
-            return -1;
-        }
-        printf("Adding samples...\n");
+
+    ARG_MATCH("add"){
+        ARG_ERROR(4, "lsmp add output FILES");
         argpos++;
         lsamp_add(ld, &ad);
-    }else if(!strcmp(argv[argpos], "info")){
-        if(argc  < 3 ){
-            fprintf(stderr, "Usage: lsmp info FILE\n");
-            return -1;
-        }
+    }else ARG_MATCH("info"){
+        ARG_ERROR(3, "lsmp info FILE");
         argpos++;
         lsamp_info(ld, &ad);
     }
 	return 0;
 }
-

@@ -81,7 +81,7 @@ void process(LSAMP_FLOAT *buf, myData *data) {
 int main() {
     myData data;
     lsamp_create_header(&data.ld);
-    lsamp_read_header(data.ld, "test.smp");
+    lsamp_read_header(data.ld, "smp/tr909.smp");
     lsamp_print_header(data.ld, stdout);
     data.length = 3 * 44100;
     data.reg = 0;
