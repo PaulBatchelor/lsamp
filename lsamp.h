@@ -63,6 +63,7 @@ uint32_t lsamp_get_size(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_get_offset(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
     uint32_t data_size, uint32_t reg, uint32_t pos);
+
 /* File Operations */
 
 void lsamp_open_sndfile(lsamp_data *ld, const char *fname);

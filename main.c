@@ -142,6 +142,7 @@ uint32_t lsamp_sndfile_size(lsamp_data *ld) {
 void lsamp_close_sndfile(lsamp_data *ld) {
     sf_close(ld->sndfile.file);
 }
+
 void lsamp_write_sndfile(lsamp_data *ld) {
 	if(!ld->buf_open) {
 		fprintf(stderr, "ERROR: TMP sndfile is not openend.\n");
@@ -172,10 +173,8 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
 	SF_INFO info;
 	SNDFILE *wavfile;
 	uint32_t file_size = lsamp_get_size(ld, pos) / sizeof(LSAMP_FLOAT);
-//	uint32_t file_size = LSAMP_BUFFER_SIZE;
 	uint32_t samples_left = file_size;
 	uint32_t bufsize = LSAMP_BUFFER_SIZE;
-//	long file_offset = ld->header_size + (lsamp_get_offset(ld, pos) * sizeof(LSAMP_FLOAT));
 	long file_offset = ld->header_size + lsamp_get_offset(ld, pos);
 	info.samplerate = 44100;
 	info.channels = 1;
