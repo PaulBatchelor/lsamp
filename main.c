@@ -223,6 +223,8 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
  *  - move this comment somewhere else?
  * 
  */
+
+/* read_to_buf is deprecated... remove as soon as possible */
 uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
     uint32_t data_size, uint32_t reg, uint32_t pos){
     uint32_t offset = lsamp_get_offset(ld, reg);
@@ -237,6 +239,32 @@ uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data,
     return sampsread;
 }
 
+uint32_t lsamp_read_to_cbuf(lsamp_data *ld, lsamp_cbuf *cbuf, 
+    uint32_t reg, uint32_t pos) {
+    int i;
+    uint32_t offset = lsamp_get_offset(ld, reg);
+    uint32_t sample_size = lsamp_get_size(ld, reg) / sizeof(LSAMP_FLOAT);
+    uint32_t sampsread = LSAMP_BUFFER_SIZE;
+    LSAMP_FLOAT tmp[LSAMP_BUFFER_SIZE];
+
+    memset(tmp, 0, LSAMP_BUFFER_SIZE * sizeof(LSAMP_FLOAT)); 
+    if(pos + LSAMP_BUFFER_SIZE > sample_size) {
+        sampsread = LSAMP_BUFFER_SIZE - ((pos + LSAMP_BUFFER_SIZE ) - sample_size);
+    }
+    
+    if(sampsread > 0) {
+        fseek(ld->fp, ld->header_size + offset + pos * sizeof(LSAMP_FLOAT), SEEK_SET);
+        fread(tmp, sizeof(LSAMP_FLOAT), sampsread, ld->fp);
+    }
+
+    for(i = 0; i < sampsread; i++){
+        lsamp_cbuf_put_val(cbuf, tmp[i]);
+    }
+    for(i = 0; i < LSAMP_BUFFER_SIZE - sampsread; i++) {
+        lsamp_cbuf_put_val(cbuf, 0);
+    }
+    return sampsread;
+}
 void lsamp_combine(char *header, char *data) {
     printf("combining %s and %s...\n", header, data);
     FILE *hp, *dp;
@@ -259,4 +287,18 @@ void lsamp_combine(char *header, char *data) {
     fclose(dp);
     fclose(hp);
     unlink(data);
+}
+
+void lsamp_cbuf_init(lsamp_cbuf *c) {
+    c->pos = 0;
+}
+
+void lsamp_cbuf_put_val(lsamp_cbuf *cbuf, LSAMP_FLOAT val){
+    cbuf->buf[cbuf->pos] = val;
+    cbuf->pos = (cbuf->pos + 1) % LSAMP_BUFFER_SIZE;
+}
+
+void lsamp_cbuf_get_val(lsamp_cbuf *cbuf, LSAMP_FLOAT *val){
+    *val = cbuf->buf[cbuf->pos];
+    cbuf->pos = (cbuf->pos + 1) % LSAMP_BUFFER_SIZE;
 }

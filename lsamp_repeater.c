@@ -12,11 +12,6 @@
 #define LSBUFSIZE 1024
 
 typedef struct {
-    int pos;
-    LSAMP_FLOAT buf[LSBUFSIZE];
-}circbuf;
-
-typedef struct {
     lsamp_data *ld;
     uint32_t reg;
     long length;
@@ -26,36 +21,21 @@ typedef struct {
     long clock;
     uint32_t bufpos;
     LSAMP_FLOAT tmp[LSBUFSIZE];
-    circbuf buf;
+    lsamp_cbuf buf;
 } myData;
-
-void init_cbuf(circbuf *c) {
-    c->pos = 0;
-}
-
-void cbuf_put_val(circbuf *cbuf, LSAMP_FLOAT val){
-    cbuf->buf[cbuf->pos] = val;
-    cbuf->pos = (cbuf->pos + 1) % LSBUFSIZE;
-}
-
-void cbuf_get_val(circbuf *cbuf, LSAMP_FLOAT *val){
-    *val = cbuf->buf[cbuf->pos];
-    cbuf->pos = (cbuf->pos + 1) % LSBUFSIZE;
-}
 
 void load_buffer(myData *data) {
     int i;
     data->pos += lsamp_read_to_buf(data->ld, data->tmp, 
             LSBUFSIZE, data->reg, data->pos);
     for(i = 0; i < LSBUFSIZE; i++){
-        cbuf_put_val(&data->buf, data->tmp[i]);
+        lsamp_cbuf_put_val(&data->buf, data->tmp[i]);
     }
+   //data->pos += lsamp_read_to_cbuf(data->ld, &data->buf, data->reg, data->pos);
 }
 
 void get_bufval(LSAMP_FLOAT *buf, myData *data) {
-    //*buf = data->tmp[data->bufpos];
-    //data->bufpos = (data->bufpos + 1) % LSBUFSIZE;
-    cbuf_get_val(&data->buf, buf);
+    lsamp_cbuf_get_val(&data->buf, buf);
 }
 
 void process(LSAMP_FLOAT *buf, myData *data) {
@@ -63,7 +43,7 @@ void process(LSAMP_FLOAT *buf, myData *data) {
         load_buffer(data);
         data->bufpos = 0;
     }
-    if(data->clock == 10000) {
+    if(data->clock == 20000) {
         data->clock = 0;
         data->pos = 0;
         if(data->reg == 0){
@@ -77,7 +57,6 @@ void process(LSAMP_FLOAT *buf, myData *data) {
     data->clock++;
 }
 
-
 int main() {
     myData data;
     lsamp_create_header(&data.ld);
@@ -88,7 +67,7 @@ int main() {
     data.pos = 0;
     data.clock = 0;
     data.bufpos = 0;
-    init_cbuf(&data.buf);
+    lsamp_cbuf_init(&data.buf);
     printf("writing silence to disk \n");
     SNDFILE *file;
     SF_INFO info;

@@ -14,6 +14,12 @@ enum {
     LSAMP_WRITE
 };
 
+/* Circular buffer for lsamp_write_to_buf */
+typedef struct {
+    int pos;
+    LSAMP_FLOAT buf[LSAMP_BUFFER_SIZE];
+}lsamp_cbuf;
+
 typedef FILE lsamp_fp_data;
 typedef FILE lsamp_fp_out;
 
@@ -63,7 +69,8 @@ uint32_t lsamp_get_size(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_get_offset(lsamp_data *ld, uint32_t reg);
 uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
     uint32_t data_size, uint32_t reg, uint32_t pos);
-
+uint32_t lsamp_read_to_cbuf(lsamp_data *ld, lsamp_cbuf *cbuf, 
+    uint32_t reg, uint32_t pos);
 /* File Operations */
 
 void lsamp_open_sndfile(lsamp_data *ld, const char *fname);
@@ -74,5 +81,10 @@ void lsamp_add_file(lsamp_data *ld, const char *fname);
 void lsamp_open_tmpfile(lsamp_data *ld, const char *tmpfile);
 void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, 
         const char *outfile, uint32_t pos);
-
 void lsamp_combine(char *header, char *data);
+
+/* Circular Buffer Functions */
+
+void lsamp_cbuf_init(lsamp_cbuf *c);
+void lsamp_cbuf_put_val(lsamp_cbuf *cbuf, LSAMP_FLOAT val);
+void lsamp_cbuf_get_val(lsamp_cbuf *cbuf, LSAMP_FLOAT *val);
