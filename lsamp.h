@@ -15,7 +15,7 @@
 
 #define LSAMP_FLOAT float
 
-#define LSTMP(var) LSAMP_FLOAT var[LSAMP_BUFFER_SIZE];
+#define LSAMP_TMP(var) LSAMP_FLOAT var[LSAMP_BUFFER_SIZE];
 
 enum {
     LSAMP_INIT,
