@@ -1,3 +1,10 @@
+#include <sndfile.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <sndfile.h>
+#include <string.h>
+
 #define LSWRITE_32(val) fwrite(&ld->val, sizeof(uint32_t), 1, ld->fp)
 #define LSWRITE_16(val) fwrite(&ld->val, sizeof(uint16_t), 1, ld->fp)
 
@@ -7,6 +14,8 @@
 #define LSAMP_BUFFER_SIZE 1024
 
 #define LSAMP_FLOAT float
+
+#define LSTMP(var) LSAMP_FLOAT var[LSAMP_BUFFER_SIZE];
 
 enum {
     LSAMP_INIT,

@@ -47,7 +47,8 @@ int test_4(lsamp_data *ld) {
     lsamp_add_file(ld, "snare.wav");   
     lsamp_add_file(ld, "clap.wav");  
     lsamp_print_header(ld, stdout);
-    /*TODO: valgrind memory error occurs when lsamp_write_header is NOT called...why? */ lsamp_write_header(ld, "out.header"); 
+    /*TODO: valgrind memory error occurs when lsamp_write_header is NOT called...why? */ 
+    lsamp_write_header(ld, "out.header"); 
     lsamp_destroy_header(&ld);
     return 1;
 }

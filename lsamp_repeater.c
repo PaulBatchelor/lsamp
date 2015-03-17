@@ -1,11 +1,3 @@
-#include <stdio.h>
-#include <sndfile.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <sndfile.h>
-#include <string.h>
-
 #include "lsamp.h"
 
 #define BUFLEN 1024
@@ -31,7 +23,8 @@ void load_buffer(myData *data) {
     for(i = 0; i < LSBUFSIZE; i++){
         lsamp_cbuf_put_val(&data->buf, data->tmp[i]);
     }
-   //data->pos += lsamp_read_to_cbuf(data->ld, &data->buf, data->reg, data->pos);
+
+    //data->pos += lsamp_read_to_cbuf(data->ld, &data->buf, data->reg, data->pos);
 }
 
 void get_bufval(LSAMP_FLOAT *buf, myData *data) {

@@ -223,8 +223,6 @@ void lsamp_write_sample(lsamp_data *ld, const char *lsmpfile, const char *outfil
  *  - move this comment somewhere else?
  * 
  */
-
-/* read_to_buf is deprecated... remove as soon as possible */
 uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data, 
     uint32_t data_size, uint32_t reg, uint32_t pos){
     uint32_t offset = lsamp_get_offset(ld, reg);
@@ -238,7 +236,7 @@ uint32_t lsamp_read_to_buf(lsamp_data *ld, LSAMP_FLOAT *data,
     fread(data, sizeof(LSAMP_FLOAT), sampsread, ld->fp);
     return sampsread;
 }
-
+/* Not working right now... */
 uint32_t lsamp_read_to_cbuf(lsamp_data *ld, lsamp_cbuf *cbuf, 
     uint32_t reg, uint32_t pos) {
     int i;

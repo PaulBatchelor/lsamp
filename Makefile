@@ -15,7 +15,7 @@ memtest: test_lsamp
 	valgrind --leak-check=yes test_lsamp
 
 liblsamp.a: main.c
-	ar rcs $< main.o
+	ar rcs $@ main.o
 
 lsmp: lsmp.c main.o
 	gcc $< -Wall -lsndfile -o$@ main.o 
