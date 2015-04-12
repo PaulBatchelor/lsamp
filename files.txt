@@ -1,2 +1,0 @@
-clap.wav
-snare.wav
