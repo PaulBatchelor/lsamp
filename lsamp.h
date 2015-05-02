@@ -28,7 +28,8 @@ void lsamp_close(lsamp_data **ls);
 
 void lsamp_create_table(lsamp_data *ls);
 void lsamp_add_file(lsamp_data *ls, const char *filename, const char *keyword);
-void lsamp_remove_file(lsamp_data *ls, int row_id);
+void lsamp_remove_entry(lsamp_data *ls, const char *keyword);
+void lsamp_extract_entry(lsamp_data *ls, const char *keyword, const char *outfile);
 
 void lsamp_len(lsamp_data *ls, int row_id);
 

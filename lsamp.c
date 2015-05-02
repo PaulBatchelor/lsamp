@@ -104,10 +104,27 @@ void lsamp_add_file(lsamp_data *ls, const char *filename, const char *keyword) {
     sqlite3_blob_close(pBlob);
 }
 
-void lsamp_remove_file(lsamp_data *ls, int row_id) {
-
+void lsamp_remove_entry(lsamp_data *ls, const char *keyword) {
+    //fprintf(stderr, "This feature has not been implemented yet. Sorry about that\n");
+    sqlite3_stmt *stmt;
+    int rc = sqlite3_prepare_v2(ls->db,
+            "delete from lsamp where keyword=?;",
+            -1,
+            &stmt,
+            NULL);
+    if(rc) {
+        fprintf(stderr, "Remove entry error: %s\n", sqlite3_errmsg(ls->db));
+        sqlite3_finalize(stmt);
+        return;
+    }
+    sqlite3_bind_text(stmt, 1, keyword, -1, SQLITE_STATIC);
+    sqlite3_step(stmt);
+    sqlite3_finalize(stmt);
 }
 
+void lsamp_extract_entry(lsamp_data *ls, const char *keyword, const char *outfile) {
+    fprintf(stderr, "This feature has not been implemented yet. Sorry about that\n");
+}
 void lsamp_len(lsamp_data *ls, int row_id) {
 
 }
