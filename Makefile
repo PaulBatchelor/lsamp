@@ -1,3 +1,9 @@
+.PHONY: all default
+
+default: all
+
+all: lsamp liblsamp.a
+
 CFLAGS=-g -lsndfile -lsqlite3 -I ./
 
 lsamp.o: lsamp.c
@@ -21,3 +27,5 @@ uninstall:
 	rm -f /usr/local/lib/liblsamp.a
 	rm -f /usr/local/lib/lsamp.h
 
+clean: 
+	rm -f liblsamp.a lsamp.o lsamp
