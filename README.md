@@ -13,6 +13,11 @@ Features:
 - easily embeddable into larger projects
 - CLI utility for adding files
 
+Future Features:
+- Ability to extract files from lsamp files
+- Playback speed control
+- Basic Attack/Release envelope
+
 Compile + Install:
 ------------------
 
@@ -33,3 +38,5 @@ lsamp add foo.smp bar foo.wav
 Too remove keyword "bar" from "foo.smp"
 
 lsamp remove foo.smp bar
+
+
