@@ -15,9 +15,21 @@ Features:
 
 Compile + Install:
 ------------------
-    make
-    sudo make install
+
+make
+sudo make install
 
 CLI Usage:
-------
-    *coming soon*
+----------
+
+To create a new lsamp file:
+
+lsamp init foo.smp
+   
+To add file "foo.wav" to "foo.smp" with the keyword "bar":
+
+lsamp add foo.smp bar foo.wav
+
+Too remove keyword "bar" from "foo.smp"
+
+lsamp remove foo.smp bar

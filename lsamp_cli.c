@@ -40,7 +40,7 @@ int extract_from_lsamp(const char *dbfile, const char *keyword, const char *outf
 int main(int argc, char *argv[] ) {
     if(argc == 1) {
         error:
-        printf("Usage: lsamp [add|remove|extract] lsamp_file keyword (filename)\n");
+        printf("Usage: lsamp [add|remove|extract|init] lsamp_file keyword (filename)\n");
         return 1;
     }
 
