@@ -1,9 +1,9 @@
 #include "lsamp.h"
 
-void lsamp_open(lsamp_data **ls, const char *filename) {
+int lsamp_open(lsamp_data **ls, const char *filename) {
     *ls = (lsamp_data *)malloc(sizeof(lsamp_data));
     lsamp_data *lp = *ls;
-    sqlite3_open(filename, &lp->db);
+    return sqlite3_open(filename, &lp->db);
 }
 
 void lsamp_close(lsamp_data **ls) {

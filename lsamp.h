@@ -23,7 +23,7 @@ typedef struct {
     uint32_t total_frames, frmpos, rowid, bufsize;
 }lsamp_handle;
 
-void lsamp_open(lsamp_data **ls, const char *filename);
+int lsamp_open(lsamp_data **ls, const char *filename);
 void lsamp_close(lsamp_data **ls);
 
 void lsamp_create_table(lsamp_data *ls);
