@@ -5,7 +5,7 @@
 int add_to_lsamp(const char *dbfile, const char *keyword, const char *filename) {
     printf("Adding %s to %s as \"%s\"...\n", filename, dbfile, keyword);
     lsamp_data *ls;
-    lsamp_open(&ls, dbfile);
+    lsamp_open(&ls, dbfile, LSAMP_READ);
     lsamp_add_file(ls, filename, keyword);
     lsamp_close(&ls);
     return 1;
@@ -13,7 +13,7 @@ int add_to_lsamp(const char *dbfile, const char *keyword, const char *filename) 
 
 int init_lsamp_db(const char *dbfile) {
     lsamp_data *ls; 
-    lsamp_open(&ls, dbfile);
+    lsamp_open(&ls, dbfile, LSAMP_CREATE);
     lsamp_create_table(ls);
     lsamp_close(&ls);
     return 1;
@@ -22,7 +22,7 @@ int init_lsamp_db(const char *dbfile) {
 int remove_from_lsamp(const char *dbfile, const char *keyword) {
     printf("Removing \"%s\" from %s...\n", keyword, dbfile);
     lsamp_data *ls;
-    lsamp_open(&ls, dbfile);
+    lsamp_open(&ls, dbfile, LSAMP_READ);
     lsamp_remove_entry(ls, keyword);
     lsamp_close(&ls);
     return 1;
@@ -31,7 +31,7 @@ int remove_from_lsamp(const char *dbfile, const char *keyword) {
 int extract_from_lsamp(const char *dbfile, const char *keyword, const char *outfile) {
     printf("Extracting \"%s\" from %s to %s...\n", keyword, dbfile, outfile);
     lsamp_data *ls;
-    lsamp_open(&ls, dbfile);
+    lsamp_open(&ls, dbfile, LSAMP_READ);
     lsamp_extract_entry(ls, keyword, outfile);
     lsamp_close(&ls);
     return 1;

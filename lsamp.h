@@ -2,7 +2,10 @@
 #define LSBUFSIZE 4096
 #define LSAMP_OK 1
 #define LSAMP_NOT_OK 0
+#define LSAMP_READ 0
+#define LSAMP_CREATE 1
 
+#include <unistd.h>
 #include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -23,7 +26,7 @@ typedef struct {
     uint32_t total_frames, frmpos, rowid, bufsize;
 }lsamp_handle;
 
-int lsamp_open(lsamp_data **ls, const char *filename);
+int lsamp_open(lsamp_data **ls, const char *filename, int mode);
 void lsamp_close(lsamp_data **ls);
 
 void lsamp_create_table(lsamp_data *ls);

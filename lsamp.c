@@ -1,9 +1,15 @@
 #include "lsamp.h"
 
-int lsamp_open(lsamp_data **ls, const char *filename) {
+int lsamp_open(lsamp_data **ls, const char *filename, int mode) {
+     if(mode == LSAMP_READ && access(filename, F_OK)) {
+         fprintf(stderr, "Error: Could not open file %s\n", filename);
+         return 0;
+     }
+
     *ls = (lsamp_data *)malloc(sizeof(lsamp_data));
     lsamp_data *lp = *ls;
-    return sqlite3_open(filename, &lp->db);
+    sqlite3_open(filename, &lp->db);
+    return 1;
 }
 
 void lsamp_close(lsamp_data **ls) {
